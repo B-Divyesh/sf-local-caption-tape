@@ -1,0 +1,8 @@
+{
+  "slug": "local-caption-tape",
+  "title": "Local Caption Tape",
+  "summary": "Find what was said in your last meeting, privately",
+  "artifact_class": "desktop-app",
+  "smallest_useful_product": "A local desktop app that captions selected system or microphone audio, keeps a rolling encrypted transcript, and exports timestamped Markdown or TXT when explicitly saved.",
+  "monetization": "one-time"
+}
