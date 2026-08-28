@@ -31,6 +31,6 @@
     "shortDescription": "Private, searchable meeting captions",
     "longDescription": "Keep an encrypted rolling tape of on-device microphone captions, search it, then export Markdown or TXT.",
     "copyright": "Copyright © 2026 Sociobot",
-    "icons": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"]
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"]
   }
 }
