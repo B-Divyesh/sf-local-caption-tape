@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Local Caption Tape",
+  "version": "0.1.0",
+  "identifier": "in.sociobot.local-caption-tape",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:4173/app",
+    "beforeBuildCommand": "npm run build:site",
+    "frontendDist": "../dist/site"
+  },
+  "app": {
+    "windows": [{
+      "label": "main",
+      "title": "Local Caption Tape",
+      "width": 1180,
+      "height": 820,
+      "minWidth": 390,
+      "minHeight": 640,
+      "resizable": true,
+      "fullscreen": false
+    }],
+    "security": {
+      "csp": "default-src 'self' ipc: http://ipc.localhost; img-src 'self' asset: http://asset.localhost data:; style-src 'self'; script-src 'self'; connect-src 'self' ipc: http://ipc.localhost https://api.sociobot.in https://api.github.com"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Productivity",
+    "shortDescription": "Private, searchable meeting captions",
+    "longDescription": "Keep an encrypted rolling tape of on-device microphone captions, search it, then export Markdown or TXT.",
+    "copyright": "Copyright © 2026 Sociobot",
+    "icons": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"]
+  }
+}

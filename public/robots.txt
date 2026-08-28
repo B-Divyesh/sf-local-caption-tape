@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://local-caption-tape.sociobot.in/sitemap.xml

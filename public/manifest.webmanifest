@@ -1,0 +1,10 @@
+{
+  "name": "Local Caption Tape",
+  "short_name": "Caption Tape",
+  "description": "Private, searchable meeting captions on your device.",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#102b34",
+  "theme_color": "#102b34",
+  "icons": [{ "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }]
+}
