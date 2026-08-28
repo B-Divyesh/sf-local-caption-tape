@@ -29,15 +29,15 @@ jobs:
         with:
           script: |
             const tag = '${{ steps.tag.outputs.value }}';
-            let release;
-            try {
-              release = await github.rest.repos.getReleaseByTag({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                tag
-              });
-            } catch (error) {
-              if (error.status !== 404) throw error;
+            const existing = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+            let release = existing.data.find((item) => item.tag_name === tag);
+            if (release) {
+              release = { data: release };
+            } else {
               release = await github.rest.repos.createRelease({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -56,10 +56,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: macos-13
+          - platform: macos-15-intel
             target: x86_64-apple-darwin
             args: --target x86_64-apple-darwin
-          - platform: macos-14
+          - platform: macos-latest
             target: aarch64-apple-darwin
             args: --target aarch64-apple-darwin
           - platform: ubuntu-22.04
