@@ -141,7 +141,7 @@ function appView(demo: boolean): string {
     </section>
     <div class="app-window tape-window">
       <div class="window-bar"><span id="match-count">${demo ? '6 captions' : 'No captions yet'}</span><span id="retention-label">${demo ? 'Demo resets on request' : 'Deletes after 60 minutes'}</span></div>
-      <div id="empty-state" class="empty-state ${demo ? 'hidden' : ''}"><span class="empty-symbol" aria-hidden="true">●━━━━</span><h2>Your captions will appear here</h2><p>Confirm consent and start the microphone. You can also type a caption below.</p></div>
+      <div id="empty-state" class="empty-state ${demo ? 'hidden' : ''}"><span class="empty-symbol" aria-hidden="true">●━━━━</span><h2>Your captions will appear here</h2><p>Confirm consent and start the microphone. You can also type a caption below.</p><a class="text-link" href="/demo" data-link>Load sample meeting →</a></div>
       <ol class="caption-list" id="caption-list" aria-label="Transcript captions"></ol>
       <form id="manual-form" class="manual-entry"><label for="manual-caption">Add a caption by typing</label><div><input id="manual-caption" maxlength="280" placeholder="Type words you need to keep"><button class="button secondary">Add caption</button></div></form>
     </div>
@@ -196,7 +196,7 @@ function tapeController(demo: boolean): () => void {
     list.innerHTML = matching.map((caption) => {
       const safeText = escapeHtml(caption.text);
       const text = query ? safeText.replace(new RegExp(`(${escapeRegExp(escapeHtml(query))})`, 'ig'), '<mark>$1</mark>') : safeText;
-      return `<li id="caption-${caption.id}"><time datetime="PT${caption.at}S">${timestamp(caption.at)}</time><div>${caption.speaker ? `<strong>${escapeHtml(caption.speaker)}${caption.uncertain ? ' <span class="uncertain">uncertain</span>' : ''}</strong>` : ''}<p>${text}</p></div></li>`;
+      return `<li id="caption-${caption.id}" tabindex="-1"><time datetime="PT${caption.at}S">${timestamp(caption.at)}</time><div>${caption.speaker ? `<strong>${escapeHtml(caption.speaker)}${caption.uncertain ? ' <span class="uncertain">uncertain</span>' : ''}</strong>` : ''}<p>${text}</p></div></li>`;
     }).join('');
   };
 
@@ -217,6 +217,12 @@ function tapeController(demo: boolean): () => void {
   render();
 
   search.addEventListener('input', render);
+  search.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      list.querySelector<HTMLElement>('li')?.focus({ preventScroll: false });
+    }
+  });
   document.addEventListener('keydown', focusSearch);
   document.querySelector('#export-md')?.addEventListener('click', () => downloadTranscript('md', state.captions));
   document.querySelector('#export-txt')?.addEventListener('click', () => downloadTranscript('txt', state.captions));
@@ -285,7 +291,12 @@ function tapeController(demo: boolean): () => void {
     status.lastElementChild!.textContent = 'Demo reset';
   });
 
-  return () => { document.removeEventListener('keydown', focusSearch); recognition?.abort(); };
+  const reportConnection = () => {
+    if (!navigator.onLine) status.lastElementChild!.textContent = 'Offline · local tape ready';
+  };
+  addEventListener('offline', reportConnection);
+
+  return () => { document.removeEventListener('keydown', focusSearch); removeEventListener('offline', reportConnection); recognition?.abort(); };
 
   function focusSearch(event: KeyboardEvent) {
     if ((event.ctrlKey || event.metaKey) && event.key.toLocaleLowerCase() === 'k') { event.preventDefault(); search.focus(); }
@@ -341,7 +352,12 @@ async function loadRelease(): Promise<void> {
   const cached = localStorage.getItem('release:local-caption-tape');
   try {
     const value = cached ? JSON.parse(cached) as { at: number; data: GitHubRelease } : null;
-    const data = value && Date.now() - value.at < 3_600_000 ? value.data : await fetch('https://api.github.com/repos/B-Divyesh/sf-local-caption-tape/releases/latest').then((r) => { if (!r.ok) throw new Error('no release'); return r.json() as Promise<GitHubRelease>; });
+    const data = value && Date.now() - value.at < 3_600_000 ? value.data : await fetch('https://api.github.com/repos/B-Divyesh/sf-local-caption-tape/releases?per_page=1').then(async (response) => {
+      if (!response.ok) throw new Error('release lookup failed');
+      const releases = await response.json() as GitHubRelease[];
+      if (!releases[0]) throw new Error('no release');
+      return releases[0];
+    });
     localStorage.setItem('release:local-caption-tape', JSON.stringify({ at: Date.now(), data }));
     const wanted = navigator.userAgent.includes('Windows') ? /\.msi$|\.exe$/ : navigator.userAgent.includes('Mac') ? /\.dmg$/ : /\.AppImage$|\.deb$/;
     const asset = data.assets.find((item) => wanted.test(item.name));
@@ -361,6 +377,7 @@ function route(push = false): void {
   else if (path === '/privacy') { app.innerHTML = legal('privacy'); document.title = 'Privacy — Local Caption Tape'; }
   else if (path === '/terms') { app.innerHTML = legal('terms'); document.title = 'Terms — Local Caption Tape'; }
   else { app.innerHTML = notFound(); document.title = 'Not found — Local Caption Tape'; }
+  document.querySelector<HTMLLinkElement>('link[rel="canonical"]')!.href = `https://local-caption-tape.sociobot.in${path === '/' ? '/' : path}`;
   bindLinks();
   handleLicense();
   if (push) {

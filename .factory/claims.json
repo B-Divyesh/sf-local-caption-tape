@@ -1,0 +1,10 @@
+[
+  {"id":"search-phrase","claim":"Search finds a spoken phrase in the tape","where":"landing preview, app","test":"npm test -- --grep @claim:search-phrase","sandbox":"fresh browser context at /demo with bundled captions"},
+  {"id":"timestamped-export","claim":"Exports timestamped Markdown and TXT","where":"landing steps, app toolbar, README","test":"npm test -- --grep @claim:timestamped-export","sandbox":"/demo; download both files and inspect timestamps and content"},
+  {"id":"demo-isolated","claim":"Demo data is not saved to real transcript storage","where":"demo banner, README","test":"npm test -- --grep @claim:demo-isolated","sandbox":"fresh context; add a demo caption and inspect IndexedDB and localStorage"},
+  {"id":"private-network","claim":"Demo captions do not leave the device","where":"landing privacy section, privacy page","test":"npm test -- --grep @claim:private-network","sandbox":"record every request while searching and adding a caption in /demo"},
+  {"id":"encrypted-tape","claim":"Real transcripts are encrypted on this device","where":"landing facts, privacy page, README","test":"npm test -- --grep @claim:encrypted-tape","sandbox":"add a unique caption in /app, inspect storage for plaintext, reload and decrypt"},
+  {"id":"local-speech","claim":"Speech recognition starts only in on-device mode","where":"app speech note, privacy page, README","test":"npm test -- --grep @claim:local-speech","sandbox":"inject a speech API fixture and assert processLocally is required"},
+  {"id":"offline-reload","claim":"Works offline after the first visit","where":"landing facts, README","test":"npm test -- --grep @claim:offline-reload","sandbox":"load /demo, wait for service worker, set the browser offline, then reload"},
+  {"id":"paid-retention","claim":"A verified one-time license extends the rolling tape to four hours","where":"landing price, app, README","test":"npm test -- --grep @claim:paid-retention","sandbox":"fresh context with a recent valid cached license verdict"}
+]

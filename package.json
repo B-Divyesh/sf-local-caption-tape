@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "preview": "vite preview --outDir dist/site",
     "build": "npm run build:site",
     "build:site": "tsc --noEmit && vite build --outDir dist/site",
     "tauri": "tauri",
