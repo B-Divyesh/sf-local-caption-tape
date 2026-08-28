@@ -59,6 +59,28 @@ test('@claim:encrypted-tape stores no transcript plaintext', async ({ page }) =>
   await expect(page.getByText('violet confidential phrase')).toBeVisible();
 });
 
+test('@claim:transcript-only stores no audio object', async ({ page }) => {
+  await page.goto('/app');
+  await page.getByLabel('Add a caption by typing').fill('A transcript-only storage check');
+  await page.getByRole('button', { name: 'Add caption' }).click();
+  await page.waitForTimeout(100);
+  const stored = await page.evaluate(async () => {
+    const request = indexedDB.open('local-caption-tape');
+    const db = await new Promise<IDBDatabase>((resolve) => { request.onsuccess = () => resolve(request.result); });
+    const values = await new Promise<unknown[]>((resolve) => {
+      const result = db.transaction('private').objectStore('private').getAll();
+      result.onsuccess = () => resolve(result.result);
+    });
+    return values.map((value) => ({
+      isBlob: value instanceof Blob,
+      isMediaStream: typeof MediaStream !== 'undefined' && value instanceof MediaStream,
+      fields: value && typeof value === 'object' ? Object.keys(value) : []
+    }));
+  });
+  expect(stored.some((value) => value.isBlob || value.isMediaStream)).toBe(false);
+  expect(stored.some((value) => value.fields.includes('ciphertext'))).toBe(true);
+});
+
 test('@claim:local-speech requires on-device processing', async ({ page }) => {
   await page.addInitScript(() => {
     class FakeRecognition {
@@ -87,8 +109,27 @@ test('@claim:offline-reload reloads the sample offline', async ({ page, context 
   await expect(page.getByText('Sample loaded')).toBeVisible();
 });
 
-test('@claim:paid-retention shows four hours for a verified license', async ({ page }) => {
+test('@claim:free-retention removes captions after 60 minutes', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-08-28T12:00:00Z') });
+  await page.goto('/app');
+  await page.getByLabel('Add a caption by typing').fill('Free tape expiry marker');
+  await page.getByRole('button', { name: 'Add caption' }).click();
+  await page.clock.fastForward(61 * 60 * 1000);
+  await page.getByLabel('Search captions').fill('expiry');
+  await expect(page.getByText('Your captions will appear here')).toBeVisible();
+});
+
+test('@claim:paid-retention keeps captions for four hours', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-08-28T12:00:00Z') });
   await page.addInitScript(() => localStorage.setItem('sb_license_cache:local-caption-tape', JSON.stringify({ token: 'test', valid: true, checkedAt: Date.now() })));
   await page.goto('/app');
   await expect(page.getByText('Deletes after 4 hours')).toBeVisible();
+  await page.getByLabel('Add a caption by typing').fill('Paid tape expiry marker');
+  await page.getByRole('button', { name: 'Add caption' }).click();
+  await page.clock.fastForward(61 * 60 * 1000);
+  await page.getByLabel('Search captions').fill('paid');
+  await expect(page.getByText('Paid tape expiry marker')).toBeVisible();
+  await page.clock.fastForward(180 * 60 * 1000);
+  await page.getByLabel('Search captions').fill('expiry');
+  await expect(page.getByText('Your captions will appear here')).toBeVisible();
 });

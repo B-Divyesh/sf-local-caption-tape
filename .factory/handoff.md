@@ -21,11 +21,13 @@ npm run test:unit
 npm run build:site
 ```
 
-`npm test`: 21 passed, with one intentionally skipped duplicate desktop assertion. All eight `@claim` tests passed. Axe found no serious or critical issues across all routes on desktop and 390 px mobile.
+`npm test`: 23 passed, with one intentionally skipped duplicate desktop assertion. All ten `@claim` tests passed. Axe found no serious or critical issues across all routes on desktop and 390 px mobile. Retention checks advance the browser clock past 60 minutes and four hours.
 
 `npm run test:unit`: 3 passed.
 
 `npm run build:site`: passed. Output is `dist/site/index.html`. Initial assets are 8.63 KB JS gzip and 4.27 KB CSS gzip. The mobile hero is 28 KB WebP.
+
+`cargo check --locked --manifest-path src-tauri/Cargo.toml`: passed. `npm run tauri build -- --bundles deb` produced `Local Caption Tape_0.1.0_amd64.deb` locally.
 
 Production preview checks:
 

@@ -352,11 +352,9 @@ async function loadRelease(): Promise<void> {
   const cached = localStorage.getItem('release:local-caption-tape');
   try {
     const value = cached ? JSON.parse(cached) as { at: number; data: GitHubRelease } : null;
-    const data = value && Date.now() - value.at < 3_600_000 ? value.data : await fetch('https://api.github.com/repos/B-Divyesh/sf-local-caption-tape/releases?per_page=1').then(async (response) => {
+    const data = value && Date.now() - value.at < 3_600_000 ? value.data : await fetch('https://api.github.com/repos/B-Divyesh/sf-local-caption-tape/releases/latest').then(async (response) => {
       if (!response.ok) throw new Error('release lookup failed');
-      const releases = await response.json() as GitHubRelease[];
-      if (!releases[0]) throw new Error('no release');
-      return releases[0];
+      return response.json() as Promise<GitHubRelease>;
     });
     localStorage.setItem('release:local-caption-tape', JSON.stringify({ at: Date.now(), data }));
     const wanted = navigator.userAgent.includes('Windows') ? /\.msi$|\.exe$/ : navigator.userAgent.includes('Mac') ? /\.dmg$/ : /\.AppImage$|\.deb$/;

@@ -197,6 +197,7 @@ mark { padding: 0 .13em; color: #1a2b31; background: #f2c14e; }
 }
 
 @media (max-width: 560px) {
+  :root { font-size: 17px; }
   .nav-wrap { align-items: flex-start; padding: 12px 16px; }
   .wordmark span { max-width: 80px; line-height: 1.1; }
   .nav-links { gap: 8px; font-size: .85rem; }
