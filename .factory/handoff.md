@@ -29,6 +29,8 @@ npm run build:site
 
 `cargo check --locked --manifest-path src-tauri/Cargo.toml`: passed. `npm run tauri build -- --bundles deb` produced `Local Caption Tape_0.1.0_amd64.deb` locally.
 
+The `v0.1.0` GitHub release completed on Windows, Linux, macOS Apple Silicon, and macOS Intel. It includes `.msi`, `.exe`, `.AppImage`, `.deb`, `.rpm`, two `.dmg` files, `SHA256SUMS`, and `latest.json`. The published Linux `.deb` was downloaded again and matched its listed SHA-256: `1fb301220ade153891e976871d388fde7bce43c6404f2a95bbc45986b1e5487e`.
+
 Production preview checks:
 
 - Factory URL verifier: passed with zero console errors.
@@ -47,6 +49,5 @@ The exact static deploy command is `npm run build:site`; deploy `dist/site`.
 ## Needs operator action
 
 - Register `local-caption-tape` and its $29 one-time price in the Sociobot billing system before launch.
-- Push tag `v0.1.0`, let the release workflow finish, then verify one asset against `SHA256SUMS` and confirm `latest.json` URLs.
 - Packages are unsigned. For macOS, wire `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `APPLE_ID`, `APPLE_PASSWORD`, and `APPLE_TEAM_ID` into the workflow. For Windows, wire `WINDOWS_CERT_PFX` and `WINDOWS_CERT_PASSWORD`. No signing secrets belong in this repository.
 - Add native system-audio capture and a bundled local transcription engine in a later release if system audio is required.
