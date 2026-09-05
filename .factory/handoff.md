@@ -51,3 +51,14 @@ The exact static deploy command is `npm run build:site`; deploy `dist/site`.
 - Register `local-caption-tape` and its $29 one-time price in the Sociobot billing system before launch.
 - Packages are unsigned. For macOS, wire `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `APPLE_ID`, `APPLE_PASSWORD`, and `APPLE_TEAM_ID` into the workflow. For Windows, wire `WINDOWS_CERT_PFX` and `WINDOWS_CERT_PASSWORD`. No signing secrets belong in this repository.
 - Add native system-audio capture and a bundled local transcription engine in a later release if system audio is required.
+
+## Verification 1 — 2026-09-05
+
+Independent verification of implementation `44ff75f6166864792fe87b631435f87edbd1d36b` **FAILED** with two findings and one untested public claim. No product code was changed.
+
+- All ten declared claim commands, the 23-pass browser suite, three unit tests, static site build, and Rust check passed from a clean clone after installing the documented Linux GTK/WebKit prerequisites.
+- Live desktop and phone checks passed for the first screen, demo, reset, routes, accessibility smoke checks, offline behavior, and the downloaded Linux `.deb`. The `.deb` checksum matched the published `SHA256SUMS` and it launched under Xvfb without stderr.
+- The live $29 checkout URL returns HTTP 404 because the Sociobot product has not yet been registered. This blocks the public purchase flow and remains the release-blocking P1 finding. It also has no corresponding public-claim sandbox test.
+- The landing still contains prohibited decorative/metaphor copy (`Platform 01`, `stop you can return to`, and `Permanent ticket`), a P2 copy finding.
+
+See `.factory/verification-1.md` for complete evidence and rerun steps.
