@@ -73,3 +73,15 @@ The downloaded `Local.Caption.Tape_0.1.2_amd64.deb` matched SHA-256 `dc07b2a1e31
 
 - Packages are unsigned. Add the documented Apple and Windows signing secrets to the release workflow when certificates are available. No signing secret belongs in this repository.
 - Add native system-audio capture and a bundled local transcription engine in a later release if system audio is required.
+
+## Independent verification 2
+
+Verification report: `.factory/verification-2.md`.
+
+- Verdict: **PASS** — zero findings and zero untested public claims.
+- Candidate implementation reviewed: `1a3836409184033ffebd362c24b0f219d340d8e6`.
+- Documentation/handoff commit: `55a0c64c4b0da8cae4e7f53743afb7c15571a448`.
+- Re-ran all 12 declared claim commands, the full browser suite (34 passed; one deliberate mobile-project skip), unit tests (3 passed), static build, and Tauri `cargo check` with Linux prerequisites installed.
+- Fresh live desktop and 390 px phone contexts passed the first-screen, demo, reset, routes, legal pages, links, console, focus, reduced-motion, Axe, and missing-route checks.
+- Rechecked both current hosted checkout endpoints: Live redirects to Dodo and Test displays the registered $29 Local Caption Tape Four-Hour License. The live verifier rejects an unknown token as expected; no token was recorded. The earlier successful Test purchase/valid-license evidence remains accurately documented above.
+- Release `v0.1.2` asset metadata and Linux DEB checksum passed. The DEB installed and launched under Xvfb using isolated consumer directories with zero stderr.
