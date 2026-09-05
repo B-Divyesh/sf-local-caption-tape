@@ -1,6 +1,6 @@
 [package]
 name = "local-caption-tape"
-version = "0.1.0"
+version = "0.1.1"
 description = "Private, searchable meeting captions on your device"
 authors = ["Sociobot (Param Factory)"]
 license = "MIT"

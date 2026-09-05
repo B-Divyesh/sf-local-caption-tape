@@ -14,7 +14,8 @@ Try the isolated sample at `https://local-caption-tape.sociobot.in/demo`.
 - Reload the sample offline after the first visit.
 - Use microphone speech only when an on-device language pack is available.
 - Delete captions after 60 minutes on the free tier.
-- Extend the rolling tape to four hours with a verified $29 license.
+- Buy a $29 one-time license through the hosted Sociobot checkout.
+- Extend the rolling tape to four hours after the license verifies.
 
 The app does not join meetings or retain audio. Speaker labels are manual notes and may be wrong. System-audio loopback is not in v0.1.0.
 
@@ -57,7 +58,7 @@ macOS and Windows builds remain unsigned until the operator adds signing certifi
 
 Real transcripts use AES-GCM encryption in IndexedDB. The encryption key is non-exportable and stored by the browser or webview. Demo captions stay in memory and never read real transcript storage.
 
-The optional one-time license uses the Sociobot billing API. The token is stored under `sb_license:local-caption-tape`. A cached verdict prevents more than one verification request per day.
+The optional one-time license uses the Sociobot billing API. The hosted checkout returns the license to the app. The app removes it from the URL, stores it under `sb_license:local-caption-tape`, and verifies it. A cached verdict prevents more than one verification request per day. You can also enter an existing license on the landing page.
 
 See [privacy](https://local-caption-tape.sociobot.in/privacy) and [terms](https://local-caption-tape.sociobot.in/terms).
 

@@ -33,7 +33,7 @@ button { color: inherit; }
 :focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
 ::selection { color: var(--paper-ink); background: var(--gold); }
 
-.skip-link { position: fixed; z-index: 100; top: 8px; left: 8px; padding: 12px 16px; color: var(--paper-ink); background: var(--gold); transform: translateY(-160%); }
+.skip-link { position: fixed; z-index: 100; top: 8px; left: 8px; padding: 12px 16px; color: #172b34; background: #f2c14e; transform: translateY(-160%); }
 .skip-link:focus { transform: translateY(0); }
 .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .hidden { display: none !important; }
@@ -47,7 +47,7 @@ button { color: inherit; }
 .nav-links a:hover, .nav-links a[aria-current="page"] { border-color: var(--coral); }
 
 .demo-bar { min-height: 48px; display: flex; justify-content: center; align-items: center; gap: 16px; padding: 6px 24px; color: var(--paper-ink); background: var(--paper); border-bottom: 4px double var(--paper-ink); }
-.demo-bar button, .demo-bar a { min-height: 36px; border: 0; padding: 5px 10px; color: var(--paper-ink); background: transparent; text-decoration: underline; cursor: pointer; }
+.demo-bar button, .demo-bar a { min-height: 44px; border: 0; padding: 9px 10px; color: var(--paper-ink); background: transparent; text-decoration: underline; cursor: pointer; }
 
 h1, h2, h3, p { margin-top: 0; }
 h1, h2, h3 { font-family: var(--display); text-wrap: balance; }
@@ -107,7 +107,7 @@ mark { padding: 0 .13em; color: #1a2b31; background: #f2c14e; }
 .walkthrough figure { margin: 0; }
 .mini-screen { min-height: 200px; padding: 24px; display: flex; flex-direction: column; justify-content: center; color: var(--paper-ink); background: var(--paper); border: 4px double var(--paper-ink); }
 .mini-screen.dark { color: var(--ink); background: var(--surface); border-color: var(--gold); }
-.mini-screen button { min-height: 44px; border: 2px solid currentColor; color: inherit; background: transparent; font-weight: 700; }
+.mock-button { min-height: 44px; padding: 9px 14px; display: inline-flex; align-items: center; justify-content: center; border: 2px solid currentColor; color: inherit; background: transparent; font-weight: 700; }
 .ticket-num { margin-bottom: 20px; color: var(--coral-dark); font: 800 2rem/1 var(--display); }
 .rail { color: var(--gold); letter-spacing: .12em; }
 .walkthrough figcaption { padding: 12px 4px; color: var(--muted); font-size: .9rem; }
@@ -123,6 +123,11 @@ mark { padding: 0 .13em; color: #1a2b31; background: #f2c14e; }
 .price-ticket .eyebrow { color: var(--coral-dark); }
 .price-ticket .button.quiet { color: var(--paper-ink); }
 .price-ticket .button { margin: 8px 8px 8px 0; }
+.license-restore { margin-top: 16px; padding-top: 16px; border-top: 1px solid color-mix(in srgb, var(--paper-ink) 35%, transparent); }
+.license-restore label { display: block; margin-bottom: 8px; font-weight: 700; }
+.license-restore > div { display: flex; align-items: stretch; gap: 8px; }
+.license-restore input { min-width: 0; min-height: 48px; flex: 1; padding: 10px 12px; color: var(--paper-ink); background: #fff9e8; border: 2px solid var(--paper-ink); }
+.license-result { min-height: 1.55em; margin: 8px 0 0; color: #3f4c48; font-size: .86rem; }
 .download-panel { border: 4px double var(--gold); }
 .fine-print { margin-top: 16px; color: var(--muted); font-size: .82rem; }
 .price-ticket .fine-print { color: #4f5a53; }
@@ -132,6 +137,7 @@ mark { padding: 0 .13em; color: #1a2b31; background: #f2c14e; }
 .site-footer p { margin: 0; }
 .mini-mark { color: #f2c14e; letter-spacing: -.1em; }
 .site-footer nav { display: flex; flex-wrap: wrap; gap: 24px; }
+.site-footer nav a, .legal-page a { min-height: 44px; display: inline-flex; align-items: center; }
 .build-id { grid-column: 1 / -1; color: #b9b49f; font-size: .76rem; }
 
 .legal-page, .not-found { max-width: 780px; min-height: 70vh; padding: clamp(64px, 10vw, 120px) 24px; margin: auto; }
@@ -156,6 +162,8 @@ mark { padding: 0 .13em; color: #1a2b31; background: #f2c14e; }
 .search-box input::placeholder { color: #59645e; opacity: 1; }
 .export-buttons { display: flex; gap: 8px; }
 .tape-window { min-height: 420px; }
+.license-notice { margin: 16px 24px 0; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; color: var(--paper-ink); background: var(--paper); border-left: 4px solid var(--danger); }
+.license-notice a { min-height: 44px; display: inline-flex; align-items: center; flex: 0 0 auto; }
 .tape-window .caption-list { padding-top: 32px; }
 .uncertain { margin-left: 8px; padding: 2px 5px; border: 1px solid var(--muted); color: var(--muted); font-size: .66rem; font-weight: 500; text-transform: uppercase; }
 .empty-state { max-width: 520px; margin: 64px auto 40px; padding: 0 24px; text-align: center; }
@@ -222,6 +230,8 @@ mark { padding: 0 .13em; color: #1a2b31; background: #f2c14e; }
   .search-box kbd { display: none; }
   .manual-entry { margin-inline: 14px; }
   .manual-entry > div { flex-direction: column; }
+  .license-notice { margin-inline: 14px; align-items: flex-start; flex-direction: column; }
+  .license-restore > div { flex-direction: column; }
   .local-note { grid-template-columns: 1fr; gap: 5px; }
   .danger-zone { align-items: stretch; flex-direction: column; }
 }

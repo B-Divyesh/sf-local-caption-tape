@@ -9,7 +9,7 @@ const PRODUCT = 'local-caption-tape';
 const API = `https://api.sociobot.in/api/v1/products/${PRODUCT}`;
 const LICENSE_KEY = `sb_license:${PRODUCT}`;
 const LICENSE_CACHE = `sb_license_cache:${PRODUCT}`;
-const BUILD = 'v0.1.0';
+const BUILD = 'v0.1.1';
 let cleanup: (() => void) | undefined;
 
 const icons = {
@@ -20,7 +20,7 @@ const icons = {
 function pageShell(content: string, options: { active?: string; demo?: boolean } = {}): string {
   return `
     <div class="route-announcer sr-only" aria-live="polite"></div>
-    ${options.demo ? `<aside class="demo-bar" aria-label="Demo mode"><strong>Demo</strong><span>Sample data. Nothing is saved.</span><button data-reset-demo>Reset demo</button><a href="/app" data-link>Start for real</a></aside>` : ''}
+    ${options.demo ? `<aside class="demo-bar" aria-label="Demo mode"><strong>Demo —</strong><span>Sample data. Nothing is saved.</span><button data-reset-demo>Reset demo</button><a href="/app" data-link>Start for real</a></aside>` : ''}
     <header class="site-header">
       <nav class="nav-wrap" aria-label="Main navigation">
         <a class="wordmark" href="/" data-link aria-label="Local Caption Tape home">${icons.mark}<span>Local Caption Tape</span></a>
@@ -40,10 +40,10 @@ function pageShell(content: string, options: { active?: string; demo?: boolean }
 }
 
 function landing(): string {
-  return pageShell(`<main id="main">
+  return pageShell(`<main id="main" tabindex="-1">
     <section class="hero poster-grid" aria-labelledby="page-title">
       <div class="hero-copy">
-        <p class="eyebrow">Private caption memory · Platform 01</p>
+        <p class="eyebrow">Private meeting captions</p>
         <h1 id="page-title" tabindex="-1">Find what your meeting just said</h1>
         <p class="lede">For people who need live words to stay visible, searchable, and under their control.</p>
         <div class="hero-actions">
@@ -58,12 +58,12 @@ function landing(): string {
       </div>
       <figure class="hero-art">
         <picture><source srcset="/art/caption-terminal-640.webp 640w, /art/caption-terminal.webp 1200w" sizes="(max-width: 760px) 100vw, 48vw"><img src="/art/caption-terminal.webp" width="1200" height="800" alt="A poster-style microphone feeds paper captions onto a transit line." fetchpriority="high" decoding="async"></picture>
-        <figcaption>Every spoken phrase becomes a stop you can return to.</figcaption>
+        <figcaption>Captions stay searchable as the meeting continues.</figcaption>
       </figure>
     </section>
 
     <section class="preview-section ruled" aria-labelledby="preview-title">
-      <div class="section-heading"><p class="eyebrow">The working tape</p><h2 id="preview-title">Search the words while people speak</h2><p>Try the full sample. Search for “Tuesday” and jump to the decision.</p></div>
+      <div class="section-heading"><p class="eyebrow">Caption preview</p><h2 id="preview-title">Search the words while people speak</h2><p>Try the full sample. Search for “Tuesday” and jump to the decision.</p></div>
       <div class="app-window compact-preview" aria-label="Caption tape preview">
         <div class="window-bar"><span>12:04 elapsed</span><span class="live-pill">● Captions ready</span></div>
         <div class="preview-search">${icons.search}<span>Tuesday</span><kbd>⌘ K</kbd></div>
@@ -76,16 +76,16 @@ function landing(): string {
     </section>
 
     <section class="steps" aria-labelledby="steps-title">
-      <div class="section-heading"><p class="eyebrow">Three stops</p><h2 id="steps-title">How the tape works</h2></div>
+      <div class="section-heading"><p class="eyebrow">Three steps</p><h2 id="steps-title">How the tape works</h2></div>
       <ol class="step-line">
         <li><span>01</span><div><h3>Confirm consent</h3><p>Tell people captions are running. Then start your microphone.</p></div></li>
         <li><span>02</span><div><h3>Follow and find</h3><p>Read live words. Search any phrase without stopping captions.</p></div></li>
-        <li><span>03</span><div><h3>Export or let go</h3><p>Save Markdown or TXT. Unsaved captions expire on schedule.</p></div></li>
+        <li><span>03</span><div><h3>Export or wait for deletion</h3><p>Save Markdown or TXT. Unsaved captions expire on schedule.</p></div></li>
       </ol>
       <div class="walkthrough" aria-label="Captioned screenshot walkthrough">
-        <figure><div class="mini-screen"><span class="ticket-num">01</span><p>Consent confirmed</p><button tabindex="-1">Start microphone</button></div><figcaption>Confirm consent before a caption starts.</figcaption></figure>
+        <figure><div class="mini-screen"><span class="ticket-num">01</span><p>Consent confirmed</p><span class="mock-button">Start microphone</span></div><figcaption>Confirm consent before a caption starts.</figcaption></figure>
         <figure><div class="mini-screen dark"><span class="ticket-num">02</span><p><mark>Launch checklist</mark> is the first result.</p><span class="rail">●━━━━●</span></div><figcaption>Search moves to the first spoken match.</figcaption></figure>
-        <figure><div class="mini-screen"><span class="ticket-num">03</span><p>6 captions · Markdown</p><button tabindex="-1">Export Markdown</button></div><figcaption>Export creates a timestamped local file.</figcaption></figure>
+        <figure><div class="mini-screen"><span class="ticket-num">03</span><p>6 captions · Markdown</p><span class="mock-button">Export Markdown</span></div><figcaption>Export creates a timestamped local file.</figcaption></figure>
       </div>
     </section>
 
@@ -100,8 +100,8 @@ function landing(): string {
     </section>
 
     <section class="price-section" aria-labelledby="price-title">
-      <div class="price-ticket"><p class="eyebrow">Permanent ticket</p><h2 id="price-title">Keep a longer tape for $29</h2><p>Free includes a 60-minute tape, search, and both exports. One purchase extends retention to four hours.</p><a class="button primary" href="${API}/checkout">Buy the one-time license</a><button class="button quiet" data-open-license>Have a license? Paste it</button><p class="fine-print">Sociobot is the merchant of record. Refunds revoke the license.</p></div>
-      <div class="download-panel"><p class="eyebrow">Desktop release</p><h2>Install for your computer</h2><p>Desktop packages are unsigned while certificates are pending.</p><a class="button secondary" id="platform-download" href="https://github.com/B-Divyesh/sf-local-caption-tape/releases">Downloads are being published</a><p id="download-note" class="fine-print">Open the release page for available packages.</p></div>
+      <div class="price-ticket"><p class="eyebrow">One-time license</p><h2 id="price-title">Keep a longer tape for $29</h2><p>Free includes a 60-minute tape, search, and both exports. One purchase extends retention to four hours.</p><a class="button primary" href="${API}/checkout" rel="external" aria-label="Buy the one-time license for $29 at the hosted checkout">Buy the one-time license</a><button class="button quiet" type="button" data-open-license aria-expanded="false" aria-controls="license-restore">Enter a license</button><form id="license-restore" class="license-restore hidden"><label for="license-token">License token</label><div><input id="license-token" name="license" type="password" autocomplete="off" spellcheck="false" required><button class="button quiet" type="submit">Verify license</button></div><p id="license-result" class="license-result" role="status" aria-live="polite"></p></form><p class="fine-print">Sociobot is the merchant of record. Refunds revoke the license.</p></div>
+      <div class="download-panel"><p class="eyebrow">Desktop release</p><h2>Install for your computer</h2><p>Desktop packages are unsigned while certificates are pending.</p><a class="button secondary" id="platform-download" href="https://github.com/B-Divyesh/sf-local-caption-tape/releases" rel="external" aria-label="Open Local Caption Tape releases on GitHub">Downloads are being published</a><p id="download-note" class="fine-print">Open the release page for available packages.</p></div>
     </section>
   </main>`);
 }
@@ -121,17 +121,17 @@ function legal(kind: 'privacy' | 'terms'): string {
     <h2>Purchase</h2><p>The $29 license is a one-time purchase through Sociobot. Refunds follow the merchant terms and revoke the license.</p>
     <h2>No warranty</h2><p>The app is provided as-is under the MIT License. Do not use it as the only record for safety-critical decisions.</p>
     <h2>Contact</h2><p>Email <a href="mailto:support@sociobot.in">support@sociobot.in</a> for terms questions.</p>`;
-  return pageShell(`<main id="main" class="legal-page"><p class="eyebrow">Effective 28 August 2026</p><h1 id="page-title" tabindex="-1">${privacy ? 'Privacy in plain words' : 'Terms for using the tape'}</h1>${body}</main>`, { active: kind });
+  return pageShell(`<main id="main" class="legal-page" tabindex="-1"><p class="eyebrow">Effective 28 August 2026</p><h1 id="page-title" tabindex="-1">${privacy ? 'Privacy in plain words' : 'Terms for Local Caption Tape'}</h1>${body}</main>`, { active: kind });
 }
 
 function notFound(): string {
-  return pageShell(`<main id="main" class="not-found"><div class="lost-line" aria-hidden="true">●━━━━━━╳</div><p class="eyebrow">End of the line · 404</p><h1 id="page-title" tabindex="-1">This stop is not on the tape</h1><p>The address may be old. Return to the first platform.</p><a class="button primary" href="/" data-link>Return home</a></main>`);
+  return pageShell(`<main id="main" class="not-found" tabindex="-1"><div class="lost-line" aria-hidden="true">●━━━━━━╳</div><p class="eyebrow">404 error</p><h1 id="page-title" tabindex="-1">Page not found</h1><p>The address may be old or incorrect.</p><a class="button primary" href="/" data-link>Return home</a></main>`);
 }
 
 function appView(demo: boolean): string {
-  return pageShell(`<main id="main" class="tape-page">
+  return pageShell(`<main id="main" class="tape-page" tabindex="-1">
     <section class="tape-head">
-      <div><p class="eyebrow">${demo ? 'Sample meeting · 02:01' : 'Private tape · microphone'}</p><h1 id="page-title" tabindex="-1">Keep spoken words within reach</h1><p>${demo ? 'Search this sample. Export it. Reset it at any time.' : 'Confirm consent, then start on-device microphone captions.'}</p></div>
+      <div><p class="eyebrow">${demo ? 'Sample meeting · 02:01' : 'Microphone captions'}</p><h1 id="page-title" tabindex="-1">Keep meeting captions searchable</h1><p>${demo ? 'Search this sample. Export it. Reset it at any time.' : 'Confirm consent, then start on-device microphone captions.'}</p></div>
       <div class="tape-status" id="tape-status" role="status"><span class="status-dot"></span><span>${demo ? 'Sample loaded' : 'Ready on this device'}</span></div>
     </section>
     <section class="tape-controls" aria-label="Tape controls">
@@ -140,7 +140,8 @@ function appView(demo: boolean): string {
       <div class="export-buttons"><button class="button secondary" id="export-md">Export Markdown</button><button class="button quiet" id="export-txt">Export TXT</button></div>
     </section>
     <div class="app-window tape-window">
-      <div class="window-bar"><span id="match-count">${demo ? '6 captions' : 'No captions yet'}</span><span id="retention-label">${demo ? 'Demo resets on request' : 'Deletes after 60 minutes'}</span></div>
+      <div class="window-bar"><span id="match-count">${demo ? '6 captions' : 'No captions yet'}</span><span id="retention-label" role="status">${demo ? 'Demo resets on request' : 'Deletes after 60 minutes'}</span></div>
+      ${demo ? '' : `<aside id="license-notice" class="license-notice hidden" aria-live="polite"><span>License no longer active. The free 60-minute tape remains available.</span><a href="${API}/checkout" rel="external" aria-label="Buy a license at the hosted checkout">Buy a license</a></aside>`}
       <div id="empty-state" class="empty-state ${demo ? 'hidden' : ''}"><span class="empty-symbol" aria-hidden="true">●━━━━</span><h2>Your captions will appear here</h2><p>Confirm consent and start the microphone. You can also type a caption below.</p><a class="text-link" href="/demo" data-link>Load sample meeting →</a></div>
       <ol class="caption-list" id="caption-list" aria-label="Transcript captions"></ol>
       <form id="manual-form" class="manual-entry"><label for="manual-caption">Add a caption by typing</label><div><input id="manual-caption" maxlength="280" placeholder="Type words you need to keep"><button class="button secondary">Add caption</button></div></form>
@@ -155,7 +156,8 @@ function secondsNow(startedAt: number): number {
 }
 
 function tapeController(demo: boolean): () => void {
-  let state: TapeState = { startedAt: demo ? Date.now() - 121_000 : Date.now(), captions: demo ? structuredClone(sampleCaptions) : [], retentionMinutes: hasPaidLicense() ? 240 : 60 };
+  const paidAtStart = hasPaidLicense();
+  let state: TapeState = { startedAt: demo ? Date.now() - 121_000 : Date.now(), captions: demo ? structuredClone(sampleCaptions) : [], retentionMinutes: paidAtStart ? 240 : 60 };
   let recognition: SpeechRecognition | null = null;
   const list = document.querySelector<HTMLOListElement>('#caption-list')!;
   const search = document.querySelector<HTMLInputElement>('#search-tape')!;
@@ -164,15 +166,24 @@ function tapeController(demo: boolean): () => void {
   const status = document.querySelector<HTMLElement>('#tape-status')!;
   const speechNote = document.querySelector<HTMLElement>('#speech-note')!;
   const retentionLabel = document.querySelector<HTMLElement>('#retention-label')!;
+  const licenseNotice = document.querySelector<HTMLElement>('#license-notice');
 
   if (!demo) {
     retentionLabel.textContent = `Deletes after ${state.retentionMinutes === 240 ? '4 hours' : '60 minutes'}`;
     const token = localStorage.getItem(LICENSE_KEY);
     const cache = licenseCache();
-    if (token && (!cache || Date.now() - cache.checkedAt > 86_400_000)) {
+    if (token && cache?.token === token && !cache.valid) licenseNotice?.classList.remove('hidden');
+    if (token && (!cache || cache.token !== token || Date.now() - cache.checkedAt > 86_400_000)) {
       void verifyLicense(token).then((valid) => {
+        if (valid === null) {
+          retentionLabel.textContent = state.retentionMinutes === 240
+            ? 'License check unavailable · deletes after 4 hours'
+            : 'License check unavailable · deletes after 60 minutes';
+          return;
+        }
         state.retentionMinutes = valid ? 240 : 60;
         retentionLabel.textContent = valid ? 'Deletes after 4 hours' : 'License inactive · deletes after 60 minutes';
+        licenseNotice?.classList.toggle('hidden', valid);
         void persist();
       });
     }
@@ -208,7 +219,7 @@ function tapeController(demo: boolean): () => void {
 
   if (!demo) {
     void loadTape().then((saved) => {
-      if (saved) state = saved;
+      if (saved) state = { ...saved, retentionMinutes: hasPaidLicense() ? 240 : 60 };
       render();
     }).catch(() => {
       speechNote.textContent = 'The encrypted tape could not open. Reload the app and try again.';
@@ -318,31 +329,60 @@ function licenseCache(): LicenseState | null {
 
 function hasPaidLicense(): boolean {
   const value = licenseCache();
-  return Boolean(value?.valid && Date.now() - value.checkedAt < 86_400_000);
+  const token = localStorage.getItem(LICENSE_KEY);
+  return Boolean(token && value?.token === token && value.valid);
 }
 
-async function verifyLicense(token: string): Promise<boolean> {
+async function verifyLicense(token: string): Promise<boolean | null> {
   try {
     const response = await fetch(`${API}/verify?license=${encodeURIComponent(token)}`);
-    const result = await response.json() as { valid: boolean };
+    if (!response.ok) return null;
+    const result = await response.json() as { valid?: unknown };
+    if (typeof result.valid !== 'boolean') return null;
     const value: LicenseState = { token, valid: result.valid, checkedAt: Date.now() };
     localStorage.setItem(LICENSE_CACHE, JSON.stringify(value));
     return result.valid;
-  } catch { return false; }
+  } catch { return null; }
 }
 
-function handleLicense(): void {
+function consumeLicenseReturn(): void {
   const url = new URL(location.href);
   const incoming = url.searchParams.get('license');
-  if (incoming) {
-    localStorage.setItem(LICENSE_KEY, incoming);
-    url.searchParams.delete('license');
-    history.replaceState({}, '', url);
-    void verifyLicense(incoming);
-  }
-  document.querySelector('[data-open-license]')?.addEventListener('click', () => {
-    const token = prompt('Paste your Local Caption Tape license');
-    if (token?.trim()) { localStorage.setItem(LICENSE_KEY, token.trim()); void verifyLicense(token.trim()); alert('License saved. The app will verify it in the background.'); }
+  if (!incoming) return;
+  localStorage.setItem(LICENSE_KEY, incoming);
+  url.searchParams.delete('license');
+  const remaining = `${url.search}${url.hash}`;
+  history.replaceState({}, '', `/app${remaining}`);
+}
+
+function bindLicenseRestore(): void {
+  const open = document.querySelector<HTMLButtonElement>('[data-open-license]');
+  const form = document.querySelector<HTMLFormElement>('#license-restore');
+  const input = document.querySelector<HTMLInputElement>('#license-token');
+  const result = document.querySelector<HTMLElement>('#license-result');
+  if (!open || !form || !input || !result) return;
+  open.addEventListener('click', () => {
+    form.classList.remove('hidden');
+    open.setAttribute('aria-expanded', 'true');
+    input.focus();
+  });
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const token = input.value.trim();
+    if (!token) return;
+    result.textContent = 'Checking this license…';
+    localStorage.setItem(LICENSE_KEY, token);
+    const valid = await verifyLicense(token);
+    if (valid === null) {
+      result.textContent = 'The license check is unavailable. Check your connection and try again.';
+      return;
+    }
+    if (!valid) {
+      result.textContent = 'This license is not active. Check the token or buy a license.';
+      return;
+    }
+    history.pushState({}, '', '/app');
+    route(true);
   });
 }
 
@@ -359,7 +399,12 @@ async function loadRelease(): Promise<void> {
     localStorage.setItem('release:local-caption-tape', JSON.stringify({ at: Date.now(), data }));
     const wanted = navigator.userAgent.includes('Windows') ? /\.msi$|\.exe$/ : navigator.userAgent.includes('Mac') ? /\.dmg$/ : /\.AppImage$|\.deb$/;
     const asset = data.assets.find((item) => wanted.test(item.name));
-    if (asset) { link.href = asset.browser_download_url; link.textContent = `Download ${asset.name}`; document.querySelector('#download-note')!.textContent = `Release ${data.tag_name} · ${(asset.size / 1_048_576).toFixed(1)} MB`; }
+    if (asset) {
+      link.href = asset.browser_download_url;
+      link.textContent = `Download ${asset.name}`;
+      link.setAttribute('aria-label', `Download ${asset.name} from GitHub`);
+      document.querySelector('#download-note')!.textContent = `Release ${data.tag_name} · ${(asset.size / 1_048_576).toFixed(1)} MB`;
+    }
   } catch { /* Calm fallback is already rendered. */ }
 }
 
@@ -367,6 +412,7 @@ type GitHubRelease = { tag_name: string; assets: Array<{ name: string; browser_d
 
 function route(push = false): void {
   cleanup?.();
+  consumeLicenseReturn();
   let path = location.pathname.replace(/\/$/, '') || '/';
   if (path === '/index.html') path = '/';
   if (path === '/') { app.innerHTML = landing(); document.title = 'Local Caption Tape — private meeting captions'; void loadRelease(); }
@@ -377,7 +423,7 @@ function route(push = false): void {
   else { app.innerHTML = notFound(); document.title = 'Not found — Local Caption Tape'; }
   document.querySelector<HTMLLinkElement>('link[rel="canonical"]')!.href = `https://local-caption-tape.sociobot.in${path === '/' ? '/' : path}`;
   bindLinks();
-  handleLicense();
+  bindLicenseRestore();
   if (push) {
     const h1 = document.querySelector<HTMLHeadingElement>('h1');
     h1?.focus();

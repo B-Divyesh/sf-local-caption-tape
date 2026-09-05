@@ -1,4 +1,5 @@
 [
+  {"id":"checkout-available","claim":"The $29 one-time license opens the registered hosted checkout","where":"landing price, terms, README","test":"npm test -- --grep @claim:checkout-available","sandbox":"public billing endpoint; require a 303 redirect to the Dodo checkout and a 200 page containing the registered product and $29 price"},
   {"id":"search-phrase","claim":"Search finds a spoken phrase in the tape","where":"landing preview, app","test":"npm test -- --grep @claim:search-phrase","sandbox":"fresh browser context at /demo with bundled captions"},
   {"id":"timestamped-export","claim":"Exports timestamped Markdown and TXT","where":"landing steps, app toolbar, README","test":"npm test -- --grep @claim:timestamped-export","sandbox":"/demo; download both files and inspect timestamps and content"},
   {"id":"demo-isolated","claim":"Demo data is not saved to real transcript storage","where":"demo banner, README","test":"npm test -- --grep @claim:demo-isolated","sandbox":"fresh context; add a demo caption and inspect IndexedDB and localStorage"},
@@ -8,5 +9,5 @@
   {"id":"local-speech","claim":"Speech recognition starts only in on-device mode","where":"app speech note, privacy page, README","test":"npm test -- --grep @claim:local-speech","sandbox":"inject a speech API fixture and assert processLocally is required"},
   {"id":"offline-reload","claim":"Works offline after the first visit","where":"landing facts, README","test":"npm test -- --grep @claim:offline-reload","sandbox":"load /demo, wait for service worker, set the browser offline, then reload"},
   {"id":"free-retention","claim":"The free rolling tape deletes captions after 60 minutes","where":"landing price, app, README","test":"npm test -- --grep @claim:free-retention","sandbox":"add a caption in /app, advance the clock 61 minutes, and trigger expiry"},
-  {"id":"paid-retention","claim":"A verified one-time license extends the rolling tape to four hours","where":"landing price, app, README","test":"npm test -- --grep @claim:paid-retention","sandbox":"load /app with a valid verdict, then test retention after 61 minutes and expiry after four hours"}
+  {"id":"paid-retention","claim":"A verified one-time license extends the rolling tape to four hours","where":"landing price, app, README","test":"npm test -- --grep @claim:paid-retention","sandbox":"return from checkout with a fixture license, verify it through the billing API contract, then test retention after 61 minutes and expiry after four hours"}
 ]

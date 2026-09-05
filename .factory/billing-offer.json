@@ -1,0 +1,13 @@
+{
+  "slug": "local-caption-tape",
+  "name": "Local Caption Tape Four-Hour License",
+  "price_minor": 2900,
+  "currency": "USD",
+  "price_type": "one_time_price",
+  "return_url": "https://local-caption-tape.sociobot.in/",
+  "price_evidence": "The controller opened the registered live offer on 2026-09-05; an independent repair check reached the hosted checkout and found the registered product at $29.",
+  "paid_features": [
+    "Extend rolling caption retention from 60 minutes to four hours"
+  ],
+  "license_validation_path": "https://api.sociobot.in/api/v1/products/local-caption-tape/verify?license={license}"
+}
