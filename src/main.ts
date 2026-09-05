@@ -9,7 +9,7 @@ const PRODUCT = 'local-caption-tape';
 const API = `https://api.sociobot.in/api/v1/products/${PRODUCT}`;
 const LICENSE_KEY = `sb_license:${PRODUCT}`;
 const LICENSE_CACHE = `sb_license_cache:${PRODUCT}`;
-const BUILD = 'v0.1.1';
+const BUILD = 'v0.1.2';
 let cleanup: (() => void) | undefined;
 
 const icons = {
@@ -167,6 +167,8 @@ function tapeController(demo: boolean): () => void {
   const speechNote = document.querySelector<HTMLElement>('#speech-note')!;
   const retentionLabel = document.querySelector<HTMLElement>('#retention-label')!;
   const licenseNotice = document.querySelector<HTMLElement>('#license-notice');
+  let ready: Promise<void> = Promise.resolve();
+  let persistence: Promise<void> = Promise.resolve();
 
   if (!demo) {
     retentionLabel.textContent = `Deletes after ${state.retentionMinutes === 240 ? '4 hours' : '60 minutes'}`;
@@ -190,7 +192,14 @@ function tapeController(demo: boolean): () => void {
   }
 
   const persist = async () => {
-    if (!demo) await saveTape(state);
+    if (demo) return;
+    persistence = persistence.then(async () => {
+      await ready;
+      await saveTape(structuredClone(state));
+    }).catch(() => {
+      speechNote.textContent = 'The encrypted tape could not save. Reload the app and try again.';
+    });
+    await persistence;
   };
 
   const expire = () => {
@@ -211,14 +220,15 @@ function tapeController(demo: boolean): () => void {
     }).join('');
   };
 
-  const add = (text: string) => {
+  const add = async (text: string) => {
+    await ready;
     state.captions.push({ id: crypto.randomUUID(), at: secondsNow(state.startedAt), text });
     render();
-    void persist();
+    await persist();
   };
 
   if (!demo) {
-    void loadTape().then((saved) => {
+    ready = loadTape().then((saved) => {
       if (saved) state = { ...saved, retentionMinutes: hasPaidLicense() ? 240 : 60 };
       render();
     }).catch(() => {
@@ -235,13 +245,13 @@ function tapeController(demo: boolean): () => void {
     }
   });
   document.addEventListener('keydown', focusSearch);
-  document.querySelector('#export-md')?.addEventListener('click', () => downloadTranscript('md', state.captions));
-  document.querySelector('#export-txt')?.addEventListener('click', () => downloadTranscript('txt', state.captions));
-  document.querySelector<HTMLFormElement>('#manual-form')!.addEventListener('submit', (event) => {
+  document.querySelector('#export-md')?.addEventListener('click', () => { void ready.then(() => downloadTranscript('md', state.captions)); });
+  document.querySelector('#export-txt')?.addEventListener('click', () => { void ready.then(() => downloadTranscript('txt', state.captions)); });
+  document.querySelector<HTMLFormElement>('#manual-form')!.addEventListener('submit', async (event) => {
     event.preventDefault();
     const input = document.querySelector<HTMLInputElement>('#manual-caption')!;
     const text = input.value.trim();
-    if (text) { add(text); input.value = ''; status.lastElementChild!.textContent = 'Caption added'; }
+    if (text) { await add(text); input.value = ''; status.lastElementChild!.textContent = 'Caption added'; }
   });
 
   const consent = document.querySelector<HTMLInputElement>('#consent');
@@ -273,7 +283,7 @@ function tapeController(demo: boolean): () => void {
       recognition.processLocally = true;
       recognition.onresult = (event) => {
         for (let index = event.resultIndex; index < event.results.length; index += 1) {
-          if (event.results[index].isFinal) add(event.results[index][0].transcript.trim());
+          if (event.results[index].isFinal) void add(event.results[index][0].transcript.trim());
         }
       };
       recognition.onerror = (event) => { speechNote.textContent = `Captions stopped because ${event.error.replaceAll('-', ' ')}. Check microphone access and start again.`; };
@@ -289,9 +299,13 @@ function tapeController(demo: boolean): () => void {
   });
 
   document.querySelector('#delete-tape')?.addEventListener('click', async () => {
+    await ready;
     if (!confirm(`Delete all ${state.captions.length} captions from this tape?`)) return;
     state.captions = [];
-    if (!demo) await clearTape();
+    if (!demo) {
+      persistence = persistence.then(() => clearTape());
+      await persistence;
+    }
     render();
     status.lastElementChild!.textContent = 'Tape deleted';
   });

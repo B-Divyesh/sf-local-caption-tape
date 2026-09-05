@@ -197,3 +197,16 @@ test('the live verifier rejects an unknown license', async ({ request }) => {
   expect(response.status()).toBe(200);
   expect(await response.json()).toMatchObject({ valid: false, reason: 'invalid' });
 });
+
+test('deleting immediately after an add stays deleted after reload', async ({ page }) => {
+  await page.goto('/app');
+  await page.getByLabel('Add a caption by typing').fill('delete persistence marker');
+  await page.getByRole('button', { name: 'Add caption' }).click();
+  await expect(page.getByText('delete persistence marker')).toBeVisible();
+  page.once('dialog', (dialog) => dialog.accept());
+  await page.getByRole('button', { name: 'Delete this tape' }).click();
+  await expect(page.getByText('Tape deleted')).toBeVisible();
+  await page.reload();
+  await expect(page.getByText('delete persistence marker')).toHaveCount(0);
+  await expect(page.getByText('Your captions will appear here')).toBeVisible();
+});
