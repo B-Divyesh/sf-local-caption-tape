@@ -85,3 +85,15 @@ Verification report: `.factory/verification-2.md`.
 - Fresh live desktop and 390 px phone contexts passed the first-screen, demo, reset, routes, legal pages, links, console, focus, reduced-motion, Axe, and missing-route checks.
 - Rechecked both current hosted checkout endpoints: Live redirects to Dodo and Test displays the registered $29 Local Caption Tape Four-Hour License. The live verifier rejects an unknown token as expected; no token was recorded. The earlier successful Test purchase/valid-license evidence remains accurately documented above.
 - Release `v0.1.2` asset metadata and Linux DEB checksum passed. The DEB installed and launched under Xvfb using isolated consumer directories with zero stderr.
+
+## Review 1
+
+Review report: `.factory/review-1.md`.
+
+- Verdict: **PASS** — zero findings and zero untested public claims.
+- Implementation reviewed: `1a3836409184033ffebd362c24b0f219d340d8e6`; documentation baseline: `264b3b9bc23dbe10aab39464c0482dd696427648`.
+- Fresh desktop and phone browser contexts confirmed the job, audience, and **Try it with sample data** action before scrolling; sample search, persistent label, reset, and return to an untouched real tape worked in both contexts.
+- All 12 individual declared claim commands passed, as did the full browser suite (34 passed, one intended duplicate-project skip), unit suite (3 passed), static build, and Tauri `cargo check` after normal Linux desktop prerequisites were installed.
+- Current Live and Test checkout routes both redirected to their correct Dodo hosts and presented the registered $29 offer. The live unknown-license verifier rejected its token as expected. The implementation claim suite covers return-token handling, URL cleanup, verification shape, invalid and cached-license recovery, and the four-hour entitlement boundary. No license token is retained.
+- Live route, title, console, Axe, link, security-header, legal, privacy, keyboard, reduced-motion, and styled missing-route checks passed on desktop and phone.
+- Release `v0.1.2` assets, manifest, checksum, DEB installation, and clean Xvfb launch passed again. The app ran eight seconds with zero stderr; the review timeout exit was expected.
