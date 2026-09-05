@@ -1,64 +1,75 @@
 # Local Caption Tape handoff
 
-## Built
+## Repair outcome
 
-- Tauri 2 desktop shell with a Vite and TypeScript interface.
-- Consent-gated microphone captions that require the browser or webview's on-device speech mode.
-- AES-GCM encrypted rolling tape in IndexedDB with a non-exportable device key.
+Implementation SHA: `1a3836409184033ffebd362c24b0f219d340d8e6`.
+
+This handoff is a report-only successor to that deployed implementation.
+
+- The registered live $29 offer now opens correctly. The public endpoint returns HTTP 303 to `checkout.dodopayments.com`, and the hosted checkout returns HTTP 200 with Local Caption Tape Four-Hour License at $29.
+- A real test-mode purchase returned to the product, issued a license, removed it from the browser URL, and returned `{ valid: true, reason: "ok" }` from the test verification endpoint. No license token is recorded in this repository or report. No live charge was made.
+- Checkout returns are consumed before app initialization. A verified license now applies four-hour retention without a reload.
+- Restore purchase now uses a labeled inline field. Invalid licenses stay on the useful free tier, revoked licenses show a buy link, and a cached valid verdict remains available if a daily refresh cannot connect.
+- Paid retention is recomputed after encrypted transcript load, so a saved free state cannot overwrite a verified entitlement.
+- The landing, app, and 404 copy now use direct labels. The reported platform, stop, and ticket metaphors are gone. `.factory/copy-audit.md` records the revised words and counts.
+- Encrypted writes and deletion are serialized. An immediate delete can no longer race an in-flight save and restore captions after reload.
+- The expanded license form exposed a light-theme skip-link contrast failure. The repaired state passes Axe and keeps keyboard focus visible.
+- Billing metadata is in `.factory/billing-offer.json`. The required copies are at `/work/.evidence/billing-offer.json` and `/work/.evidence/catalog-description.txt`.
+
+## Product delivered
+
+- Tauri 2 desktop shell with consent-gated, on-device microphone captions.
+- AES-GCM encrypted rolling transcript in IndexedDB with a non-exportable device key.
 - Search, keyboard jump, typed caption fallback, deletion, and timestamped Markdown or TXT exports.
-- One-click `/demo` with six bundled captions, in-memory isolation, reset, and offline reload.
-- Art-deco transit-poster site, original generated artwork, responsive layout, privacy, terms, and a styled 404 route.
-- $29 one-time Sociobot license purchase, restore, daily verification cache, and four-hour paid retention. Core search and exports remain free.
-- GitHub Actions release matrix for macOS Intel and Apple Silicon, Windows, and Linux. It publishes Tauri bundles, `SHA256SUMS`, and `latest.json`.
-- OS-aware download fallback plus checksum-verifying Linux and Windows install scripts.
+- One-click `/demo` with six bundled captions, memory-only isolation, reset, and offline reload.
+- $29 one-time Sociobot license for four-hour retention. The free 60-minute tape, search, deletion, and exports remain available.
+- Responsive landing, privacy, terms, and styled missing route with the product-specific art-deco visual system.
+- GitHub release workflow for macOS Intel and Apple Silicon, Windows, and Linux.
 
-## Verify
+## Clean verification
+
+From a fresh clone of the implementation:
 
 ```sh
 npm ci
 npm test
 npm run test:unit
 npm run build:site
+cargo check --locked --manifest-path src-tauri/Cargo.toml
 ```
 
-`npm test`: 23 passed, with one intentionally skipped duplicate desktop assertion. All ten `@claim` tests passed. Axe found no serious or critical issues across all routes on desktop and 390 px mobile. Retention checks advance the browser clock past 60 minutes and four hours.
+- All 12 commands declared in `.factory/claims.json` pass individually.
+- `npm test`: 34 passed and one expected duplicate-project test skipped.
+- `npm run test:unit`: 3 passed.
+- `npm run build:site`: passed. Initial JavaScript is 9.14 KB gzip and CSS is 4.45 KB gzip. The mobile hero is 28 KB WebP.
+- `cargo check --locked`: passed after installing the documented WebKit, GTK, app-indicator, SVG, and `patchelf` packages.
+- Axe found no serious or critical issue across `/`, `/demo`, `/app`, `/privacy`, `/terms`, and the missing route on desktop and 390 px phone viewports. Expanded restore, keyboard skip navigation, and reduced motion have regression coverage.
 
-`npm run test:unit`: 3 passed.
+## Live verification
 
-`npm run build:site`: passed. Output is `dist/site/index.html`. Initial assets are 8.63 KB JS gzip and 4.27 KB CSS gzip. The mobile hero is 28 KB WebP.
+- Deployed implementation: `1a3836409184033ffebd362c24b0f219d340d8e6`.
+- Factory URL verifier: HTTP 200, one title, `lang="en"`, one `h1`, one `main`, no missing alt text, no unlabeled buttons, and no console errors.
+- Fresh desktop and phone contexts showed the job, audience, and **Try it with sample data** action before scrolling.
+- Both contexts loaded six sample captions, found two “Tuesday” matches, showed the persistent demo label, reset to six captions, and kept sample changes out of real storage.
+- Live delete, reload, offline reload, route titles, legal pages, missing route, security headers, and all 14 crawled links passed.
+- The live invalid-license endpoint returned HTTP 200 with `valid: false` and `reason: "invalid"`.
+- Lighthouse mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100. LCP 1.4 s, CLS 0, total blocking time 30 ms, total transfer 143 KiB.
+- Evidence screenshots and reports are under `/work/.evidence/local-caption-tape-repair-1/final`.
 
-`cargo check --locked --manifest-path src-tauri/Cargo.toml`: passed. `npm run tauri build -- --bundles deb` produced `Local Caption Tape_0.1.0_amd64.deb` locally.
+## Desktop release
 
-The `v0.1.0` GitHub release completed on Windows, Linux, macOS Apple Silicon, and macOS Intel. It includes `.msi`, `.exe`, `.AppImage`, `.deb`, `.rpm`, two `.dmg` files, `SHA256SUMS`, and `latest.json`. The published Linux `.deb` was downloaded again and matched its listed SHA-256: `1fb301220ade153891e976871d388fde7bce43c6404f2a95bbc45986b1e5487e`.
+Release `v0.1.2` completed successfully on all four GitHub Actions builders. It includes macOS Intel and Apple Silicon DMGs, Windows MSI and EXE, Linux AppImage, DEB, and RPM files, `SHA256SUMS`, and a valid `latest.json`.
 
-Production preview checks:
-
-- Factory URL verifier: passed with zero console errors.
-- Lighthouse mobile: Performance 99, Accessibility 100, Best Practices 100, SEO 100.
-- Lighthouse metrics: LCP 2.1 s, CLS 0, total blocking time 0 ms.
-
-The exact static deploy command is `npm run build:site`; deploy `dist/site`.
+The downloaded `Local.Caption.Tape_0.1.2_amd64.deb` matched SHA-256 `dc07b2a1e31ef0127f27da5f05c3bd58c2045e8cf69f39cba16a0137c37a496f`. It installed as version 0.1.2 and launched under Xvfb for eight seconds with isolated XDG directories and zero stderr. The live detected-platform button resolves to the v0.1.2 AppImage.
 
 ## Known gaps
 
-- v0.1.0 captions microphone input only. System-audio loopback is stated as unavailable in the product and README.
+- v0.1.2 captions microphone input only. System-audio loopback is stated as unavailable on the landing page and in the README.
 - Local speech depends on an installed browser or OS language pack that implements `SpeechRecognition.processLocally`. The app refuses cloud speech and offers typed captions when that API is missing.
 - Speaker labels in the sample are notes. The app does not perform biometric speaker identification.
-- Local Rust compilation in the worker needs Linux WebKit and GTK development packages. The release workflow installs them before building.
+- A real test-mode purchase was verified. A live $29 transaction was intentionally not charged during repair.
 
 ## Needs operator action
 
-- Register `local-caption-tape` and its $29 one-time price in the Sociobot billing system before launch.
-- Packages are unsigned. For macOS, wire `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `APPLE_ID`, `APPLE_PASSWORD`, and `APPLE_TEAM_ID` into the workflow. For Windows, wire `WINDOWS_CERT_PFX` and `WINDOWS_CERT_PASSWORD`. No signing secrets belong in this repository.
+- Packages are unsigned. Add the documented Apple and Windows signing secrets to the release workflow when certificates are available. No signing secret belongs in this repository.
 - Add native system-audio capture and a bundled local transcription engine in a later release if system audio is required.
-
-## Verification 1 — 2026-09-05
-
-Independent verification of implementation `44ff75f6166864792fe87b631435f87edbd1d36b` **FAILED** with two findings and one untested public claim. No product code was changed.
-
-- All ten declared claim commands, the 23-pass browser suite, three unit tests, static site build, and Rust check passed from a clean clone after installing the documented Linux GTK/WebKit prerequisites.
-- Live desktop and phone checks passed for the first screen, demo, reset, routes, accessibility smoke checks, offline behavior, and the downloaded Linux `.deb`. The `.deb` checksum matched the published `SHA256SUMS` and it launched under Xvfb without stderr.
-- The live $29 checkout URL returns HTTP 404 because the Sociobot product has not yet been registered. This blocks the public purchase flow and remains the release-blocking P1 finding. It also has no corresponding public-claim sandbox test.
-- The landing still contains prohibited decorative/metaphor copy (`Platform 01`, `stop you can return to`, and `Permanent ticket`), a P2 copy finding.
-
-See `.factory/verification-1.md` for complete evidence and rerun steps.

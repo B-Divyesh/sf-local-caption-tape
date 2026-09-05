@@ -198,7 +198,7 @@ test('the live verifier rejects an unknown license', async ({ request }) => {
   expect(await response.json()).toMatchObject({ valid: false, reason: 'invalid' });
 });
 
-test('deleting immediately after an add stays deleted after reload', async ({ page }) => {
+test('@claim:delete-tape stays deleted after immediate reload', async ({ page }) => {
   await page.goto('/app');
   await page.getByLabel('Add a caption by typing').fill('delete persistence marker');
   await page.getByRole('button', { name: 'Add caption' }).click();
